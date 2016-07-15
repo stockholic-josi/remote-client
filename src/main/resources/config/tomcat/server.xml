@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <GlobalNamingResources>
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+
+    <Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000"  redirectPort="8443" URIEncoding="UTF-8" />
+    
+    <!-- Define an AJP 1.3 Connector on port 8009 -->
+    <!-- 
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" URIEncoding="UTF-8"/>
+ 	-->
+    <Engine name="Catalina" defaultHost="localhost">
+
+
+      <Host name="localhost" appBase="/usr/local/www">
+		<Context path="/" docBase="sample" reloadable="false"/>
+      </Host>
+
+
+    </Engine>
+  </Service>
+</Server>
