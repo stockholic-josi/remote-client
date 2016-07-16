@@ -83,10 +83,18 @@ public class SysUtil {
 	 * @return
 	 */
 	public static String decrypt(String str, String key){
-		StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-		standardPBEStringEncryptor.setAlgorithm("PBEWithMD5AndDES");
-		standardPBEStringEncryptor.setPassword(key);
-		return standardPBEStringEncryptor.decrypt(str);
+		String decryptStr = null;
+		try{
+			StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
+			standardPBEStringEncryptor.setAlgorithm("PBEWithMD5AndDES");
+			standardPBEStringEncryptor.setPassword(key);
+			decryptStr =  standardPBEStringEncryptor.decrypt(str);
+		}catch(Exception e){
+			System.err.println("암호 복구화 실패");
+		}
+		return decryptStr;
+				
+	
 	}
 	
 	

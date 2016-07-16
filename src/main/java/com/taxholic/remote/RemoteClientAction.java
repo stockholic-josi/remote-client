@@ -15,20 +15,16 @@ public class RemoteClientAction {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
+	private String resourcePath;
 	
-	public void install(List<String> args) throws URISyntaxException {
-		
-		String key = args.get(args.size() - 1);
-		
-		for(int i = 0; i < args.size() -1; i++){
-			installserver(args.get(i),key);
+	public void install(String[] installs, String key) throws URISyntaxException {
+		for(String str : installs){
+			installserver(str,key);
 		}
-		
     }
 	
 	public void installserver(String server, String key) throws URISyntaxException{
 		
-		String resourcePath = getResource();
 		String shFile = resourcePath+ "/script/install_" + server + ".sh";
 		File isFile = new File(shFile);
 		if(!isFile.exists()){
@@ -54,37 +50,35 @@ public class RemoteClientAction {
 	public void setConfig(String server, String resourcePath, JSchUtil js){
 		
 		if("apache".equals(server)){
-			File file1 =  new File(resourcePath + "/config/" + server + "/httpd.conf");
-			 js.scpTo(file1, "/usr/local/apache/conf/httpd.conf");
-			 
-			 File file2 =  new File(resourcePath + "/config/" + server + "/workers.properties");
-			 js.scpTo(file2, "/usr/local/apache/conf/workers.properties");
-
+			String[] frFile =	{resourcePath + "/config/" + server + "/httpd.conf"
+									,resourcePath + "/config/" + server + "/workers.properties"};
+			String[] toFile =	{"/usr/local/"+ server +"/conf/httpd.conf"
+									,"/usr/local/" + server + "/conf/workers.properties"};
+			copyRemote(frFile,toFile,js);
+			
 		}else if("nginx".equals(server)){
-			 File file1 =  new File(resourcePath + "/config/" + server + "/nginx.conf");
-			 js.scpTo(file1, "/usr/local/nginx/conf/nginx.conf");
-			 
-			 File file2 =  new File(resourcePath + "/config/" + server + "/nginxd");
-			 js.scpTo(file2, "/etc/rc.d/init.d/nginxd");
+			String[] frFile =	{resourcePath + "/config/" + server + "/nginx.conf"
+									,resourcePath + "/config/" + server + "/nginxd"};
+			String[] toFile =	{"/usr/local/" + server + "/conf/nginx.conf"
+									,"/etc/rc.d/init.d/nginxd"};
+			copyRemote(frFile,toFile,js);
 			 
 			String[] cmd = {
-					"chmod 755 /etc/rc.d/init.d/nginxd"
+				"chmod 755 /etc/rc.d/init.d/nginxd"
 			};
 			js.exec(cmd);
 			 
 		}else 	if("tomcat".equals(server)){
-			File file1 =  new File(resourcePath + "/config/" + server + "/catalina.sh");
-			 js.scpTo(file1, "/usr/local/tomcat/bin/catalina.sh");
-			 
-			 File file2 =  new File(resourcePath + "/config/" + server + "/server.xml");
-			 js.scpTo(file2, "/usr/local/tomcat/conf/server.xml");
-			 
-			 File file3 =  new File(resourcePath + "/config/" + server + "/tomcatd");
-			 js.scpTo(file3, "/usr/local/tomcat/bin/tomcatd");
-
-			 File file4 =  new File(resourcePath + "/sample.war");
-			 js.scpTo(file4, "/usr/local/www/sample.war");
-			 
+			String[] frFile =	{resourcePath + "/config/" + server + "/catalina.sh"
+									,resourcePath + "/config/" + server + "/server.xml"
+									,resourcePath + "/config/" + server + "/tomcatd"
+									,resourcePath + "/sample.war"};
+			String[] toFile =	{"/usr/local/" + server + "/bin/catalina.sh"
+									,"/usr/local/" + server + "/conf/server.xml"
+									,"/usr/local/" + server + "/bin/tomcatd"
+									,"/usr/local/www/sample.war"};
+			copyRemote(frFile,toFile,js);
+			
 			String[] cmd = {
 				"chmod 755 /usr/local/tomcat/bin/tomcatd"
 				,"chmod 755 /usr/local/tomcat/bin/catalina.sh"
@@ -105,13 +99,18 @@ public class RemoteClientAction {
 		
 	}
 	
+	public void copyRemote(String[] frFile, String[] toFile, JSchUtil js){
+		for(int i = 0; i < frFile.length; i++){
+			File file =  new File(frFile[i]);
+			 js.scpTo(file, toFile[i]);
+		}
+	}
 	
 	public void encrypt(String str, String key){
 		System.out.println(SysUtil.encrypt(str, key));
 	}
 	
 	public void cmd(String str, String key) throws URISyntaxException{
-		getResource();
 		JSchUtil js = login(key);
     	js.exec(str);
 	}
@@ -122,7 +121,6 @@ public class RemoteClientAction {
 	
 	
 	 public JSchUtil login(String key) throws URISyntaxException{
-		 
 		 JSchUtil  js = new JSchUtil(
 				SysUtil.decrypt(SysUtil.getProperty("host"), key)
 				,Integer.parseInt(SysUtil.getProperty("port"))
@@ -138,5 +136,10 @@ public class RemoteClientAction {
 		 String resourcePath = jarPath.getParent() + "/resources";
 		 SysUtil.setProperty( resourcePath + "/server.properties");
 		 return resourcePath;
+	 }
+	 
+	 public boolean keyTest(String key) throws URISyntaxException{
+		 resourcePath = getResource();
+		 return SysUtil.decrypt(SysUtil.getProperty("host"), key)== null ? false : true ;
 	 }
 }
