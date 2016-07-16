@@ -22,7 +22,7 @@ public class RemoteClientHandler {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	//서버 인스톨
-    @Option(name="-i", usage="서버설치명 arguments { apache | nginx | tomcat | svn | mysql | ftp } 콤마(,)로 구분하여 다중설치")
+    @Option(name="-i", usage="서버설치 arguments { jdk1.7 | jdk1.8 | apache | modjk |  nginx | tomcat | svn | mysql | ftp } \n콤마(,)로 구분하여 다중설치")
     private String install;
     
     //암호키
@@ -48,6 +48,7 @@ public class RemoteClientHandler {
 	 public void cmd(String[] args) throws IOException, URISyntaxException {
 		 
 		 CmdLineParser parser = new CmdLineParser(this);
+		 parser.setUsageWidth(200);
 	        try {
 	            parser.parseArgument(args);
 	        } catch( CmdLineException e ) {
@@ -103,10 +104,10 @@ public class RemoteClientHandler {
     	 parser.printUsage(System.out);
     	 System.out.println();
     	 System.out.println("Example:");
-    	 System.out.println("아파치설치\t java -jar remote-client.jar -i nginx,tomcat -k 암호키");
-    	 System.out.println("암호화\t\t java -jar remote-client.jar -e 문자열 -k 암호키");
-    	 System.out.println("셀명령\t\t java -jar remote-client.jar -c pwd or \"ls -al\"");
-    	 System.out.println("deploy\t\t java -jar remote-client.jar -d /usr/local/temp/xxx.war");
+    	 System.out.println("설치\t java -jar remote-client.jar -i nginx,tomcat -k 암호키");
+    	 System.out.println("암호화\t java -jar remote-client.jar -e 문자열 -k 암호키");
+    	 System.out.println("셀명령\t java -jar remote-client.jar -c pwd or \"ls -al\"");
+    	 System.out.println("deploy\t java -jar remote-client.jar -d /usr/local/temp/xxx.war");
     }
 	 
 	
