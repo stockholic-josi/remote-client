@@ -333,7 +333,8 @@ public class JSchUtil {
 
 			String filename = lfile.getName();
 			if(ptimestamp){
-				command="T "+(lfile.lastModified()/1000)+" 0";
+//				command="T "+(lfile.lastModified()/1000)+" 0";			//centOS 7xx before
+				command="T"+(lfile.lastModified()/1000)+" 0";			//centOS 7xx after
 				// The access time should be sent here,
 				// but it is not accessible with JavaAPI ;-<
 				command+=(" "+(lfile.lastModified()/1000)+" 0\n");

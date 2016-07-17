@@ -1,17 +1,15 @@
 #!/bin/sh
 #chkconfig: 35 81 80
-#description: tomcat 7.X
+#description: tomcat
 
 # Set some variables
 MYSELF=`basename $0`
 
 case "$1" in
         start)
-        echo -n ' '
         su - tomcat -c "exec /usr/local/tomcat/bin/catalina.sh start" >/dev/null 2>&1 ; echo 'tomcat start'
         ;;
         stop)
-        echo -n ' '
         su - tomcat -c "exec /usr/local/tomcat/bin/catalina.sh stop" >/dev/null 2>&1 ; echo 'tomcat stop'
         ;;
         *)

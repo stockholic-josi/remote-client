@@ -100,7 +100,7 @@
 #                   case the default is "true"
 # -----------------------------------------------------------------------------
 
-JAVA_HOME=/usr/local/java
+#JAVA_HOME=/usr/local/java
 JAVA_OPTS="-Djava.awt.headless=true -server -Xms512m -Xmx1024m -XX:NewSize=128m -XX:MaxNewSize=128m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC"
 
 # OS specific support.  $var _must_ be set to either true or false.

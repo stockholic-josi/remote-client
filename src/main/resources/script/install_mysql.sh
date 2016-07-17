@@ -22,7 +22,9 @@ if [ ! -f $source/$boost.tar.gz ];then
 wget  http://downloads.sourceforge.net/project/boost/boost/1.59.0/$boost.tar.gz -O $source/$boost.tar.gz
 fi
 
+if [ ! -d $source/$boost ];then
 tar zxvf $source/$boost.tar.gz -C $source
+fi
 	
 if [ ! -f $source/$mysql.tar.gz ];then
 wget http://dev.mysql.com/get/Downloads/MySQL-5.7/$mysql.tar.gz -O $source/$mysql.tar.gz

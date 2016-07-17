@@ -22,11 +22,15 @@ fi
 ln -s /usr/local/$tomcat  /usr/local/tomcat
 
 useradd -M tomcat -u 28 >& /dev/null
+
 cd /usr/local && chown -R tomcat:tomcat $tomcat
 
 if [ ! -d /usr/local/www ];then
 	mkdir -p /usr/local/www
-	cd /usr/local && chown -R tomcat:tomcat $tomcat
+fi
+
+if [ -d /usr/local/www ];then
+	cd /usr/local && chown -R tomcat:tomcat www
 fi
 
 
