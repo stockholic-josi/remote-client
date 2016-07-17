@@ -100,6 +100,18 @@ OpenJDK 64-Bit Server VM (build 25.65-b01, mixed mode)
 
 99. 기타
 
+	# systemctl list-units --type=service | grep tomcat		-- 서비스 목록보기
+	# systemctl status tomcatd.service							-- 서비스 상태보기
+	
+	# systemctl enable tomcatd.service							--  /etc/init.d/ 에 원하는 service 스크립트 생성 후 실생 (부팅시 자동실행)
+																				or chconfig --add tomcatd
+	# systemctl start tomcatd.service							-- 서비스 시작
+	# systemctl stop tomcatd.service							-- 서비스 종료
+​	# systemctl restart tomcatd.service							-- 서비스 리스타트
+	
+
+
+	# netstat -tnlp
 	# cat /proc/version	--- 리눅스 커널버전 확인
 	# uname -a
 	# arch			--- 리눅스 시스템의 비트확인(x86, x86_64)
