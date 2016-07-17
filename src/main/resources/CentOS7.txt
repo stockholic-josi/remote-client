@@ -55,8 +55,6 @@ DNS1="192.168.0.1"
 	# yum install iptables-services			--- iptables 명령어와 연관된 패키지를 설치한다	
 	# systemctl enable iptables				--- iptables 서비스 데몬이 재부팅시에 자동으로 올라오도록 만들자	
 	# systemctl [stop | start | restart ] iptables		--- iptables 서비스를 중지 | 시작 | 재시작	
-	# service iptables save					--- iptables 규칙 저장
-	# /usr/libexec/iptables/iptables.init save		--- iptables 규칙 저장
 
 	# iptables -L						--- 상태보기
 
