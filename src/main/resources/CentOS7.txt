@@ -1,0 +1,112 @@
+1. ifconfig 및 netstat 명령어가 안 먹음 
+	yum install net-tools
+
+2. 네트웍
+	설정 파일의 위치는 : "/etc/sysconfig/network-script"
+	ls -la /etc/sysconfig/network-scripts/ifcfg*
+	vi  /etc/sysconfig/network-scripts/ifcfg-enxxxxx
+
+-----------------------------------------------------
+HWADDR="00:00:29:08:A5:37"
+TYPE="Ethernet"
+# none OR dhcp
+BOOTPROTO="none"
+DEFROUTE="yes"
+PEERDNS="yes"
+PEERROUTES="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_PEERDNS="yes"
+IPV6_PEERROUTES="yes"
+IPV6_FAILURE_FATAL="no"
+NAME="enp0s3"
+UUID="b3d0246c-d2ba-49c7-98fb-2c394b30e29b"
+ONBOOT="yes"
+
+# IP Address
+IPADDR="192.168.0.5"
+# Subnet Mask
+NETMASK="255.255.255.0"
+# Default Gateway
+GATEWAY="192.168.0.1"
+# DNS Server
+DNS1="192.168.0.1"
+-----------------------------------------------------
+
+
+
+------------------------------------------------------------------- 기본적으로centos 7 에서는 systemctl 을 사용하여 서비스 데몬들을 컨트롤 한다.
+
+
+3. 런레벨
+	# who -r							--- 현재 사용중인 런레벨 확인
+	# systemctl set-default graphical.target	5	--- run level 5 변경
+	# systemctl set-default  multi-user.target	3	--- run level 3 변경
+
+
+4. 방화벽 해제
+	# systemctl stop firewalld		--- 방화벽 해제
+	# systemctl disable firewalld		-- 리부팅시 방화벽 실행 하지 않게 하기
+
+5. iptables 설정
+	
+	# yum install iptables-services			--- iptables 명령어와 연관된 패키지를 설치한다	
+	# systemctl enable iptables				--- iptables 서비스 데몬이 재부팅시에 자동으로 올라오도록 만들자	
+	# systemctl [stop | start | restart ] iptables		--- iptables 서비스를 중지 | 시작 | 재시작	
+	# service iptables save					--- iptables 규칙 저장
+	# /usr/libexec/iptables/iptables.init save		--- iptables 규칙 저장
+
+	# iptables -L						--- 상태보기
+
+	# vi /etc/sysconfig/iptables 
+
+-----------------------------------------------------
+# Firewall configuration written by system-config-firewall
+# Manual customization of this file is not recommended.
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp -s 192.168.0.0/24 --dport 22 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp -s 192.168.0.100 --dport 21 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 25 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp -s 192.168.0.100 --dport 3306 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp -s 192.168.0.100 --dport 3690 -j ACCEPT
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+----------------------------------------------------
+
+
+6 .java 설치
+	# yum list java*jdk-devel				-- 설치가능버전
+	# yum install java-1.8.0-openjdk-devel.x86_64	-- 설치
+	# javac -version						-- 버전확인
+
+	# alternatives --config java				-- 자바버전변경
+
+
+openjdk version "1.8.0_65"
+OpenJDK Runtime Environment (build 1.8.0_65-b17)
+OpenJDK 64-Bit Server VM (build 25.65-b01, mixed mode)
+
+
+
+
+99. 기타
+
+	# cat /proc/version	--- 리눅스 커널버전 확인
+	# uname -a
+	# arch			--- 리눅스 시스템의 비트확인(x86, x86_64)
+	# cat /proc/cpuinfo	--- cpu의 정보
+	# cat /proc/meminfo	--- 메모리 정보
+	# cat /proc/partitions	--- 현재 나누어진 파티션의 정보
+	
+	
