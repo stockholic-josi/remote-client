@@ -92,8 +92,11 @@ public class RemoteClientAction {
 			 File file= new File(resourcePath + "/config/" + server + "/my.cnf");
 			 js.scpTo(file, "/etc/my.cnf");
 		}else 	if("php".equals(server)){
-			 File file= new File(resourcePath + "/config/" + server + "/www.conf");
-			 js.scpTo(file, "/usr/local/php/etc/php-fpm.d/www.conf");
+			 String[] frFile =	{resourcePath + "/config/" + server + "/www.conf"
+									,resourcePath + "/config/" + server + "/Info.php"};
+			String[] toFile =	{"/usr/local/php/etc/php-fpm.d/www.conf"
+									,"/usr/local/www/php/application/controllers/Info.php"};
+			copyRemote(frFile,toFile,js);
 		}else 	if("ftp".equals(server)){
 			
 		}
