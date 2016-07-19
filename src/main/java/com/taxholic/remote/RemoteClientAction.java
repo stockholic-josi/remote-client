@@ -4,6 +4,9 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +18,14 @@ public class RemoteClientAction {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
-	private String resourcePath;
+	private String resource;
+	private Configuration prop; 
+	
+	public RemoteClientAction() throws URISyntaxException, ConfigurationException{
+		 File jarPath = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+		this.resource = jarPath.getParent() + "/resources";
+		this.prop = new PropertiesConfiguration(resource + "/server.properties");
+	}
 	
 	public void install(String[] installs, String key) throws URISyntaxException {
 		for(String str : installs){
@@ -25,7 +35,7 @@ public class RemoteClientAction {
 	
 	public void installserver(String server, String key) throws URISyntaxException{
 		
-		String shFile = resourcePath+ "/script/install_" + server + ".sh";
+		String shFile = resource+ "/script/install_" + server + ".sh";
 		File isFile = new File(shFile);
 		if(!isFile.exists()){
 			System.out.println("스크립트가 존재하지 않습니다");
@@ -42,23 +52,23 @@ public class RemoteClientAction {
 			};
 			js.exec(cmd);
 			
-			setConfig(server, resourcePath, js);
+			setConfig(server, resource, js);
 			
 		}
 	}
 	
-	public void setConfig(String server, String resourcePath, JSchUtil js){
+	public void setConfig(String server, String resource, JSchUtil js){
 		
 		if("apache".equals(server)){
-			String[] frFile =	{resourcePath + "/config/" + server + "/httpd.conf"
-									,resourcePath + "/config/" + server + "/workers.properties"};
+			String[] frFile =	{resource + "/config/" + server + "/httpd.conf"
+									,resource + "/config/" + server + "/workers.properties"};
 			String[] toFile =	{"/usr/local/"+ server +"/conf/httpd.conf"
 									,"/usr/local/" + server + "/conf/workers.properties"};
 			copyRemote(frFile,toFile,js);
 			
 		}else if("nginx".equals(server)){
-			String[] frFile =	{resourcePath + "/config/" + server + "/nginx.conf"
-									,resourcePath + "/config/" + server + "/nginxd"};
+			String[] frFile =	{resource + "/config/" + server + "/nginx.conf"
+									,resource + "/config/" + server + "/nginxd"};
 			String[] toFile =	{"/usr/local/" + server + "/conf/nginx.conf"
 									,"/etc/rc.d/init.d/nginxd"};
 			copyRemote(frFile,toFile,js);
@@ -69,10 +79,10 @@ public class RemoteClientAction {
 			js.exec(cmd);
 			 
 		}else 	if("tomcat".equals(server)){
-			String[] frFile =	{resourcePath + "/config/" + server + "/catalina.sh"
-									,resourcePath + "/config/" + server + "/server.xml"
-									,resourcePath + "/config/" + server + "/tomcatd"
-									,resourcePath + "/sample.war"};
+			String[] frFile =	{resource + "/config/" + server + "/catalina.sh"
+									,resource + "/config/" + server + "/server.xml"
+									,resource + "/config/" + server + "/tomcatd"
+									,resource + "/sample.war"};
 			String[] toFile =	{"/usr/local/" + server + "/bin/catalina.sh"
 									,"/usr/local/" + server + "/conf/server.xml"
 									,"/usr/local/" + server + "/bin/tomcatd"
@@ -89,11 +99,11 @@ public class RemoteClientAction {
 			js.exec(cmd);
 			
 		}else 	if("mysql".equals(server)){
-			 File file= new File(resourcePath + "/config/" + server + "/my.cnf");
+			 File file= new File(resource + "/config/" + server + "/my.cnf");
 			 js.scpTo(file, "/etc/my.cnf");
 		}else 	if("php".equals(server)){
-			 String[] frFile =	{resourcePath + "/config/" + server + "/www.conf"
-									,resourcePath + "/config/" + server + "/Info.php"};
+			 String[] frFile =	{resource + "/config/" + server + "/www.conf"
+									,resource + "/config/" + server + "/Info.php"};
 			String[] toFile =	{"/usr/local/php/etc/php-fpm.d/www.conf"
 									,"/usr/local/www/php/application/controllers/Info.php"};
 			copyRemote(frFile,toFile,js);
@@ -123,27 +133,19 @@ public class RemoteClientAction {
 		
 	}
 	
-	
 	 public JSchUtil login(String key) throws URISyntaxException{
 		 JSchUtil  js = new JSchUtil(
-				SysUtil.decrypt(SysUtil.getProperty("host"), key)
-				,Integer.parseInt(SysUtil.getProperty("port"))
-				,SysUtil.decrypt(SysUtil.getProperty("user"), key)
-				,SysUtil.decrypt(SysUtil.getProperty("password"), key)
+				SysUtil.decrypt(prop.getString("host"), key)
+				,Integer.parseInt(prop.getString("port"))
+				,SysUtil.decrypt(prop.getString("user"), key)
+				,SysUtil.decrypt(prop.getString("password"), key)
 			);
 		 
 		 return js;
 	 }
 	 
-	 public String getResource() throws URISyntaxException{
-		 File jarPath = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-		 String resourcePath = jarPath.getParent() + "/resources";
-		 SysUtil.setProperty( resourcePath + "/server.properties");
-		 return resourcePath;
-	 }
 	 
 	 public boolean keyTest(String key) throws URISyntaxException{
-		 resourcePath = getResource();
-		 return SysUtil.decrypt(SysUtil.getProperty("host"), key)== null ? false : true ;
+		 return SysUtil.decrypt(prop.getString("host"), key)== null ? false : true ;
 	 }
 }

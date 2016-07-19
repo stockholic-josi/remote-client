@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -45,7 +46,7 @@ public class RemoteClientHandler {
     @Argument
     private List<String> arguments = new ArrayList<String>();
 
-	 public void cmd(String[] args) throws IOException, URISyntaxException {
+	 public void cmd(String[] args) throws IOException, URISyntaxException, ConfigurationException {
 		 
 		 CmdLineParser parser = new CmdLineParser(this);
 		 parser.setUsageWidth(200);
