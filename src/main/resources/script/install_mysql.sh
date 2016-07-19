@@ -53,3 +53,9 @@ rm -rf $source/$mysql
 #/usr/local/mysql/bin/mysqladmin -u root -p<이전거> password '뉴패스워드'
 # grant all privileges on *.* to merong@localhost identified by 'Wkwkdaus' 
 
+#패스월드 까먹으면 안전모드 실행 후 패스워드 없이 들어감
+#./mysqld_safe --skip-grant-tables
+# update user set authentication_string=password('Wkwkdaus') where user='root';
+# FLUSH PRIVILEGES;
+
+
