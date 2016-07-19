@@ -91,8 +91,9 @@ public class RemoteClientAction {
 		}else 	if("mysql".equals(server)){
 			 File file= new File(resourcePath + "/config/" + server + "/my.cnf");
 			 js.scpTo(file, "/etc/my.cnf");
-		}else 	if("svn".equals(server)){
-			
+		}else 	if("php".equals(server)){
+			 File file= new File(resourcePath + "/config/" + server + "/www.conf");
+			 js.scpTo(file, "/usr/local/php/etc/php-fpm.d/www.conf");
 		}else 	if("ftp".equals(server)){
 			
 		}
