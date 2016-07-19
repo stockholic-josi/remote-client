@@ -2,6 +2,9 @@ package com.taxholic.remote;
 
 import java.io.File;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +18,19 @@ public class JSchTest{
 	
 	
 	@Test
-	public void Test_아파티깔아요() {
+	public void Test_아파티깔아요() throws ConfigurationException {
 		
 		logger.debug("-------------------------------------------------------------------------------> start");
 		
-		String resourcePath = ClassLoader.getSystemResource("").getPath() + "../resources";
-		SysUtil.setProperty( resourcePath + "/server.properties");
+		String resource = ClassLoader.getSystemResource("").getPath() + "../resources";
+		
+		Configuration prop = new PropertiesConfiguration(resource + "/server.properties");
 		
 		JSchUtil  js = new JSchUtil(
-				SysUtil.decrypt(SysUtil.getProperty("host"), "1234")
-				,Integer.parseInt(SysUtil.getProperty("port"))
-				,SysUtil.decrypt(SysUtil.getProperty("user"), "1234")
-				,SysUtil.decrypt(SysUtil.getProperty("password"), "1234")
+				SysUtil.decrypt(prop.getString("host"), "1234")
+				,prop.getInt("port")
+				,SysUtil.decrypt(prop.getString("user"), "1234")
+				,SysUtil.decrypt(prop.getString("password"), "1234")
 		);
 //
 //		try{

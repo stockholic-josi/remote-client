@@ -2,7 +2,6 @@ package com.taxholic.remote;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -79,15 +78,7 @@ public class RemoteClientAction {
 			js.exec(cmd);
 			 
 		}else 	if("tomcat".equals(server)){
-			String[] frFile =	{resource + "/config/" + server + "/catalina.sh"
-									,resource + "/config/" + server + "/server.xml"
-									,resource + "/config/" + server + "/tomcatd"
-									,resource + "/sample.war"};
-			String[] toFile =	{"/usr/local/" + server + "/bin/catalina.sh"
-									,"/usr/local/" + server + "/conf/server.xml"
-									,"/usr/local/" + server + "/bin/tomcatd"
-									,"/usr/local/www/sample.war"};
-			copyRemote(frFile,toFile,js);
+			 copyRemote(server,js);
 			
 			String[] cmd = {
 				"chmod 755 /usr/local/tomcat/bin/tomcatd"
@@ -115,10 +106,22 @@ public class RemoteClientAction {
 	
 	public void copyRemote(String[] frFile, String[] toFile, JSchUtil js){
 		for(int i = 0; i < frFile.length; i++){
-			File file =  new File(frFile[i]);
+			File file =  new File(resource + frFile[i]);
 			 js.scpTo(file, toFile[i]);
 		}
 	}
+
+	public void copyRemote(String server, JSchUtil js){
+		
+		String[] frFile = prop.getStringArray(server + ".frFile");
+		String[] toFile = prop.getStringArray(server + ".toFile");
+		
+		for(int i = 0; i < frFile.length; i++){
+			File file =  new File(resource + frFile[i]);
+			js.scpTo(file, toFile[i]);
+		}
+	}
+
 	
 	public void encrypt(String str, String key){
 		System.out.println(SysUtil.encrypt(str, key));
@@ -134,9 +137,10 @@ public class RemoteClientAction {
 	}
 	
 	 public JSchUtil login(String key) throws URISyntaxException{
+		 
 		 JSchUtil  js = new JSchUtil(
 				SysUtil.decrypt(prop.getString("host"), key)
-				,Integer.parseInt(prop.getString("port"))
+				,prop.getInt("port")
 				,SysUtil.decrypt(prop.getString("user"), key)
 				,SysUtil.decrypt(prop.getString("password"), key)
 			);
