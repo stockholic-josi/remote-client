@@ -10,6 +10,7 @@
 
 source=/usr/local/source
 php=php-7.0.8
+cifw=3.0.6
 path=/usr/local/php
 
 if [ ! -d $source ];then
@@ -41,5 +42,15 @@ cp -a $source/$php/php.ini-production $path/etc/php.ini
 cp -a $source/$php/sapi/fpm/php-fpm.conf $path/etc/php-fpm.conf
 chmod 755 $source/$php/sapi/fpm/init.d.php-fpm
 cp -a $source/$php/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+
+
+
+if [ ! -f $source/cifw.tar.gz ];then
+wget https://github.com/bcit-ci/CodeIgniter/archive/$cifw.tar.gz -O $source/$cifw.tar.gz
+fi
+
+tar zxvf $source/$cifw.tar.gz -C /usr/local/www
+mv /usr/local/www/CodeIgniter-$cifw /usr/local/www/php
+
 
 rm -rf $source/$php
