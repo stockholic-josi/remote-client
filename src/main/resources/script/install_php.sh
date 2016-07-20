@@ -48,7 +48,7 @@ cp -a $source/$php/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
 
 
 if [ ! -f $source/cifw.tar.gz ];then
-wget https://github.com/bcit-ci/CodeIgniter/archive/$CI_version.tar.gz -O $source/$CI_name-$CI_version.tar.gz
+wget --no-check-certificate https://github.com/bcit-ci/CodeIgniter/archive/$CI_version.tar.gz -O $source/$CI_name-$CI_version.tar.gz
 fi
 
 tar zxvf $source/$CI_name-$CI_version.tar.gz -C /usr/local/www
