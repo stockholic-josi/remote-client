@@ -25,13 +25,20 @@ public class JSchTest{
 		String resource = ClassLoader.getSystemResource("").getPath() + "../resources";
 		
 		Configuration prop = new PropertiesConfiguration(resource + "/server.properties");
+		String[] keys =  prop.getStringArray("tomcat.cmd");
 		
-		JSchUtil  js = new JSchUtil(
-				SysUtil.decrypt(prop.getString("host"), "1234")
-				,prop.getInt("port")
-				,SysUtil.decrypt(prop.getString("user"), "1234")
-				,SysUtil.decrypt(prop.getString("password"), "1234")
-		);
+		for(String k : keys){
+			System.out.println(k);
+		}
+		
+		
+		
+//		JSchUtil  js = new JSchUtil(
+//				SysUtil.decrypt(prop.getString("host"), "1234")
+//				,prop.getInt("port")
+//				,SysUtil.decrypt(prop.getString("user"), "1234")
+//				,SysUtil.decrypt(prop.getString("password"), "1234")
+//		);
 //
 //		try{
 //			
@@ -52,8 +59,8 @@ public class JSchTest{
 		 
 		 
 //		//리모트 파일 수신
-		File file = new File("D:/nginx.conf");
-		js.scpFrom("/usr/local/nginx-1.9.9/conf/nginx.conf",file);
+//		File file = new File("D:/nginx.conf");
+//		js.scpFrom("/usr/local/nginx-1.9.9/conf/nginx.conf",file);
 		
 
 		
