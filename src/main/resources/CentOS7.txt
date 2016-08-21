@@ -59,6 +59,7 @@ DNS1="192.168.0.1"
 	# iptables -L						--- 상태보기
 
 	# vi /etc/sysconfig/iptables 
+	# systemctl restart iptables	
 
 -----------------------------------------------------
 # Firewall configuration written by system-config-firewall

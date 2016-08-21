@@ -25,20 +25,17 @@ public class JSchTest{
 		String resource = ClassLoader.getSystemResource("").getPath() + "../resources";
 		
 		Configuration prop = new PropertiesConfiguration(resource + "/server.properties");
-		String[] keys =  prop.getStringArray("tomcat.cmd");
+//		String[] keys =  prop.getStringArray("tomcat.cmd");
+//		for(String k : keys){
+//			System.out.println(k);
+//		}
 		
-		for(String k : keys){
-			System.out.println(k);
-		}
-		
-		
-		
-//		JSchUtil  js = new JSchUtil(
-//				SysUtil.decrypt(prop.getString("host"), "1234")
-//				,prop.getInt("port")
-//				,SysUtil.decrypt(prop.getString("user"), "1234")
-//				,SysUtil.decrypt(prop.getString("password"), "1234")
-//		);
+		JSchUtil  js = new JSchUtil(
+				SysUtil.decrypt(prop.getString("host"), "1234")
+				,prop.getInt("port")
+				,SysUtil.decrypt(prop.getString("user"), "1234")
+				,SysUtil.decrypt(prop.getString("password"), "1234")
+		);
 //
 //		try{
 //			
@@ -52,10 +49,9 @@ public class JSchTest{
 //		}
 	
 		
-//		
 //		 //파일 전송
-//		 File file = new File("D:/99.tmp/javamelody-1.60.0.war");
-//		 js.scpTo(file, "/usr/local/source/javamelody-1.60.0.war");
+		 File file = new File("E:/01.work/private/stock.sql");
+		 js.scpTo(file, "/usr/local/source/stock.sql");
 		 
 		 
 //		//리모트 파일 수신
