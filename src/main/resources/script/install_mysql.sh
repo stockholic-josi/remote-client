@@ -55,7 +55,10 @@ rm -rf $source/$mysql
 
 #패스월드 까먹으면 안전모드 실행 후 패스워드 없이 들어감
 #./mysqld_safe --skip-grant-tables &
-# update user set authentication_string=password('Wkwkdaus') where user='root';
+# update user set authentication_string=password('qkrtjqkddhkTsi') where user='root';
 # FLUSH PRIVILEGES;
+
+#ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+#SET PASSWORD = PASSWORD('qkrtjqkddhkTsi');
 
 
